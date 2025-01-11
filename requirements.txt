@@ -1,0 +1,6 @@
+numpy==1.26.4
+opencv-contrib-python==4.10.0.84
+opencv-python==4.7.0.72
+opencv-python-headless==4.8.1.78
+Pillow==9.5.0
+pytk==0.0.2.1
