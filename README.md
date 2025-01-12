@@ -73,3 +73,11 @@ This application provides a user-friendly interface for applying common image pr
 -   Pillow (PIL)
 -   NumPy
 
+## Next Steps (Future)
+The purpose of this tool is to gain hands-on experience with OpenCV functions, observe the effects of parameters on images, and determine the optimal settings for an image. Enhance the tool further by these:
+
+- Adding more OpenCV functions in menu and perform real time image processing.
+- Use LLM to Generate python code automatically on right side by passing the list of operations.
+- Saving the processed image to a file for data labeling (specially for medical image segmentation).
+
+This project is an excellent starting point for understanding the OpenCV functions and integration of OpenCV with Tkinter.
