@@ -198,5 +198,54 @@ class ImageProcessing:
         ttk.Label(frame, text="Blur Kernel Size:").pack(anchor="w", padx=10, pady=(5,2))
         ttk.Scale(frame, from_=1, to=11, orient=tk.HORIZONTAL, variable=blur_kernel_var, command=lambda x: apply_blur()).pack(fill="x", padx=10, pady=(0,5))
         ttk.Label(frame, text="Sharpen Kernel Size:").pack(anchor="w", padx=10, pady=(5,2))
-        ttk.Scale(frame, from_=1, to=11, orient=tk.HORIZONTAL, variable=sharpen_kernel_var, command=lambda x: apply_sharpen()).pack(fill="x", padx=10, pady=(0,5))                                                                 
-                                                                        
+        ttk.Scale(frame, from_=1, to=11, orient=tk.HORIZONTAL, variable=sharpen_kernel_var, command=lambda x: apply_sharpen()).pack(fill="x", padx=10, pady=(0,5))  
+
+    def create_sift_options(self, frame):
+        sift_var = tk.BooleanVar()
+        show_location_var = tk.BooleanVar()
+        show_size_var = tk.BooleanVar()  # Represents scale/size
+        show_orientation_var = tk.BooleanVar()
+
+        def update_sift():
+            if self.image_viewer.cv_image is None:
+                return
+            gray = cv2.cvtColor(self.image_viewer.cv_image.copy(), cv2.COLOR_BGR2GRAY)
+
+            if sift_var.get():
+                sift = cv2.xfeatures2d.SIFT_create()
+                keypoints, descriptors = sift.detectAndCompute(gray, None)
+
+                img_with_keypoints = cv2.cvtColor(gray, cv2.COLOR_GRAY2BGR)
+
+                for kp in keypoints:
+                    x, y = int(kp.pt[0]), int(kp.pt[1])
+                    size = int(kp.size / 2)
+                    angle = kp.angle
+
+                    if show_location_var.get():
+                        cv2.circle(img_with_keypoints, (x, y), 3, (0, 255, 0), -1)  # Increased radius to 3
+
+                    if show_size_var.get():
+                        cv2.circle(img_with_keypoints, (x, y), size, (0, 255, 0), 1)
+
+                    if show_orientation_var.get():
+                        end_x = int(x + size * np.cos(np.deg2rad(angle)))
+                        end_y = int(y + size * np.sin(np.deg2rad(angle)))
+                        cv2.line(img_with_keypoints, (x, y), (end_x, end_y), (0, 255, 0), 1)
+
+                self.image_viewer.current_image = img_with_keypoints
+            else:
+                if self.image_viewer.original_image is not None:
+                    self.image_viewer.current_image = self.image_viewer.original_image.copy()
+                else:
+                    self.image_viewer.current_image = cv2.cvtColor(gray, cv2.COLOR_GRAY2BGR)
+
+            self.update_image()
+
+        ttk.Checkbutton(frame, text="Enable SIFT", variable=sift_var, command=update_sift).pack(anchor="w", padx=10, pady=3)
+        ttk.Checkbutton(frame, text="Show Location", variable=show_location_var, command=update_sift).pack(anchor="w", padx=20, pady=2)
+        ttk.Checkbutton(frame, text="Show Size", variable=show_size_var, command=update_sift).pack(anchor="w", padx=20, pady=2)
+        ttk.Checkbutton(frame, text="Show Orientation", variable=show_orientation_var, command=update_sift).pack(anchor="w", padx=20, pady=2)
+
+        
+                                                            

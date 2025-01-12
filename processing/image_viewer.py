@@ -71,6 +71,7 @@ class ImageViewer:
             ("Thresholding", self.show_threshold_menu),
             ("Edge Detection", self.show_edge_menu),
             ("Image Filtering", self.show_filter_menu),
+            ("SIFT", self.show_sift_menu), # New SIFT menu entry
             ("Revert to Original", self.revert_image)
         ]
 
@@ -81,6 +82,7 @@ class ImageViewer:
         self.threshold_frame = ttk.Frame(self.left_frame, style="Menu.TFrame", padding=(10,0))
         self.edge_frame = ttk.Frame(self.left_frame, style="Menu.TFrame", padding=(10,0))
         self.filter_frame = ttk.Frame(self.left_frame, style="Menu.TFrame", padding=(10,0))
+        self.sift_frame = ttk.Frame(self.left_frame, style="Menu.TFrame", padding=(10,0)) # New SIFT frame
 
     def revert_image(self):
         if self.image_processing:
@@ -93,6 +95,10 @@ class ImageViewer:
                 widget.destroy()
         frame.pack(fill="x", pady=(0, 10), padx=5)
         self.current_frame = frame
+
+    def show_sift_menu(self):
+        self.show_frame(self.sift_frame)
+        self.image_processing.create_sift_options(self.sift_frame)
 
     def show_color_menu(self):
         self.show_frame(self.color_frame)
@@ -109,3 +115,10 @@ class ImageViewer:
     def show_filter_menu(self):
         self.show_frame(self.filter_frame)
         self.image_processing.create_filter_options(self.filter_frame)
+    
+    def hide_all_frames(self):
+        self.color_frame.pack_forget()
+        self.threshold_frame.pack_forget()
+        self.edge_frame.pack_forget()
+        self.filter_frame.pack_forget()
+        self.sift_frame.pack_forget()
